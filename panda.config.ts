@@ -42,5 +42,5 @@ export default defineConfig({
       backgroundColor: "{colors.colorBg}",
       color: "{colors.colorTextPrimary}"
     }
-  }
+  },
 });
