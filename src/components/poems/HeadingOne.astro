@@ -1,0 +1,20 @@
+---
+import { css } from "@styled-system/css";
+import "@fontsource/long-cang";
+---
+
+<h1
+  class={css({
+    marginBlockStart: "4",
+    marginBlockEnd: "4",
+    fontSize: "4xl",
+    fontWeight: "bold",
+    fontFamily: "'Long Cang'",
+    position: 'sticky',
+    backgroundColor: 'colorBg',
+    top: 0,
+    zIndex: 10,
+  })}
+>
+  <slot />
+</h1>

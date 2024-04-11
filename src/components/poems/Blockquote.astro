@@ -1,0 +1,26 @@
+---
+import { css } from "@styled-system/css";
+---
+
+<style>
+  blockquote {
+    quotes: "\201C" "\201D";
+  }
+</style>
+<blockquote
+  class={css({
+    opacity: "0.5",
+    margin: 4,
+    fontSize: "sm",
+    "& p:first-of-type::before": {
+      content: 'open-quote'
+    },
+    "& > p": {
+      textAlign: 'unset',
+      display: 'unset',
+      fontSize: "sm",
+    }
+  })}
+>
+  <slot />
+</blockquote>
