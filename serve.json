@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    {"source": "/poems/_astro/:file", "destination": "/dist/_astro/:file"}
+  ]
+}

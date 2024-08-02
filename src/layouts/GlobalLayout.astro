@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import { css } from "@styled-system/css";
 
 interface Props {
   title?: string;
@@ -19,7 +20,12 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title || "诗词集"}</title>
   </head>
-  <body class="page">
+  <body
+    class={css({
+      color: "colorTextPrimary",
+      backgroundColor: "colorBg",
+    })}
+  >
     <slot />
   </body>
 </html>

@@ -1,3 +1,4 @@
+import { removeUnusedCssVars } from './src/utils/remove-unused-css-vars';
 import { defineConfig } from "@pandacss/dev";
 
 export default defineConfig({
@@ -37,10 +38,11 @@ export default defineConfig({
 
   // The output directory for your css system
   outdir: "styled-system",
-  globalCss: {
-    body: {
-      backgroundColor: "{colors.colorBg}",
-      color: "{colors.colorTextPrimary}"
+  hooks: {
+    'cssgen:done': ({artifact, content}) => {
+      if (artifact === 'styles.css') {
+        return removeUnusedCssVars(content);
+      }
     }
-  },
+  }
 });

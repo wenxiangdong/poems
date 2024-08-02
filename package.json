@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
+    "serve": "pnpm dlx serve .",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -18,6 +19,7 @@
     "typescript": "^5.4.4"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.37.2"
+    "@pandacss/dev": "^0.37.2",
+    "postcss": "^8.4.40"
   }
 }
