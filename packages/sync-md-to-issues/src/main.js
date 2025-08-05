@@ -22,7 +22,7 @@ export async function run() {
     const list = []
     let res = reg.exec(fileContent)
     while (res) {
-      list.push({ title: res[1], content: res[2] })
+      list.unshift({ title: res[1], content: res[2] })
       res = reg.exec(fileContent)
     }
     // 发issue
