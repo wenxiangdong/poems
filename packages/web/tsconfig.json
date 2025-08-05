@@ -8,7 +8,6 @@
       "@styled-system/*": ["./styled-system/*"],
     },
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
     "allowJs": true
   }
 }

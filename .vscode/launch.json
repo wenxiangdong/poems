@@ -6,6 +6,12 @@
       "name": "Development server",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "command": "npx @github/local-action ./packages/sync-md src/main.js .env",
+      "name": "sync md test",
+      "request": "launch",
+      "type": "node-terminal"
     }
   ]
 }
