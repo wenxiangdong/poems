@@ -6,17 +6,7 @@ settings:
 
 importers:
 
-  packages/github-client:
-    dependencies:
-      octokit:
-        specifier: ^5.0.3
-        version: 5.0.3
-    devDependencies:
-      '@types/node':
-        specifier: ^24.2.0
-        version: 24.2.0
-
-  packages/sync-md:
+  packages/sync-md-to-issues:
     dependencies:
       '@actions/core':
         specifier: ^1.11.1

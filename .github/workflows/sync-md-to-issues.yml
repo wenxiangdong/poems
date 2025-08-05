@@ -2,7 +2,7 @@ name: Sync MD to issues
 
 on:
   push:
-    branches: [ sync-md ]
+    branches: [ sync-md-to-issues ]
   workflow_dispatch:
 
 # Allow this job to clone the repo and create a page deployment
@@ -10,9 +10,11 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 jobs:
-  build:
+  sync:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
@@ -25,18 +27,15 @@ jobs:
           version: latest
       - name: Install
         shell: "bash"
-        run: pnpm --filter sync-md install
+        run: pnpm --filter sync-md-to-issues install
       - name: Build
         shell: "bash"
-        run: pnpm --filter sync-md bundle
-  sync:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: run local action
-        uses: ./packages/sync-md
+        run: pnpm --filter sync-md-to-issues bundle
+      - name: Run local action
+        uses: ./packages/sync-md-to-issues
         with:
           path: ./data/poem.md
         env: # Or as an environment variable
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
