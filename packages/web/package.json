@@ -17,6 +17,8 @@
     "@astrojs/mdx": "^4.3.3",
     "@fontsource/long-cang": "^5.0.11",
     "astro": "^5.12.8",
+    "github-client": "workspace:*",
+    "marked": "^16.1.2",
     "typescript": "^5.4.4"
   },
   "devDependencies": {

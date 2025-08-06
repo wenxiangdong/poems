@@ -27,7 +27,7 @@ jobs:
           version: latest
       - name: Install
         shell: "bash"
-        run: pnpm --filter sync-md-to-issues install
+        run: pnpm --filter sync-md-to-issues... install
       - name: Build
         shell: "bash"
         run: pnpm --filter sync-md-to-issues bundle

@@ -1,0 +1,129 @@
+---
+import { getClient } from "github-client";
+import GlobalLayout from "../layouts/GlobalLayout.astro";
+import { marked } from "marked";
+import { css } from "@styled-system/css";
+import "@fontsource/long-cang";
+const client = getClient();
+const owner = "wenxiangdong";
+const repo = "poems";
+const list = await client.paginate(client.rest.issues.listForRepo, {
+  owner,
+  repo,
+  per_page: 100,
+});
+marked.use({
+  renderer: {
+    blockquote({ tokens }) {
+      const text = this.parser.parse(tokens);
+      return `
+            <blockquote class="${css({
+              opacity: "0.5",
+              margin: 4,
+              fontSize: "sm",
+              spaceY: 2,
+              "& p::before": {
+                content: "open-quote",
+              },
+              "& > p": {
+                fontSize: "initial",
+              },
+            })}">
+              ${text}
+            </blockquote>
+            `;
+    },
+    paragraph({ tokens }) {
+      return `
+      <p class="${css({
+        textAlign: "justify",
+        display: "flex",
+        justifyContent: "center",
+        fontSize: "lg",
+      })}" >${tokens.map((t) => t.raw).join("")}</p>
+      `;
+    },
+  },
+});
+const issues = await Promise.all(
+  list.map(async (item) => {
+    return {
+      title: item.title,
+      body: await marked.parse(item.body ?? ""),
+    };
+  })
+);
+---
+
+<GlobalLayout>
+  <style>
+    @keyframes my-animation {
+      0% {
+        transform: scale(0.1);
+        opacity: 0;
+      }
+      45% {
+        transform: scale(0.1);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      55% {
+        transform: scale(0.1);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(0.1);
+        opacity: 0;
+      }
+    }
+    .container {
+      scroll-snap-type: y mandatory;
+      width: 100vw;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .page {
+      width: 100%;
+      height: 100%;
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      scroll-snap-align: center;
+      view-timeline-name: --page-view;
+      animation-name: my-animation;
+      animation-duration: 1ms;
+      animation-fill-mode: both;
+      animation-direction: alternate;
+      animation-timing-function: ease;
+      animation-timeline: --page-view;
+    }
+
+    blockquote {
+      quotes: "\201C" "\201D";
+    }
+  </style>
+  <div class="container">
+    {
+      issues.map((issue) => (
+        <div class="page">
+          <h1
+            class={css({
+              fontSize: "4xl",
+              fontFamily: "'Long Cang'",
+              textAlign: "center",
+            })}
+            id={issue.title}
+          >
+            {issue.title}
+          </h1>
+          <article set:html={issue.body} />
+        </div>
+      ))
+    }
+  </div>
+</GlobalLayout>
