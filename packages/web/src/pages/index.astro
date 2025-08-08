@@ -4,6 +4,7 @@ import GlobalLayout from "../layouts/GlobalLayout.astro";
 import { marked } from "marked";
 import { css } from "@styled-system/css";
 import "@fontsource/long-cang";
+import { aspectRatio, circle, flex, hstack } from "@styled-system/patterns";
 const client = getClient();
 const owner = "wenxiangdong";
 const repo = "poems";
@@ -45,11 +46,39 @@ marked.use({
     },
   },
 });
+const me = (await client.rest.users.getByUsername({ username: owner })).data;
+const REACTION_2_EMOJI = {
+  "+1": "👍",
+  "-1": "👎",
+  heart: "❤️",
+  laugh: "😄",
+  confused: "😕",
+  hooray: "🎉",
+  eyes: "👀",
+  rocket: "🚀",
+};
 const issues = await Promise.all(
   list.map(async (item) => {
     return {
       title: item.title,
       body: await marked.parse(item.body ?? ""),
+      user:
+        item.user?.type === "Bot"
+          ? {
+              ...me,
+              name: "文向东",
+            }
+          : item.user,
+      html_url: item.html_url,
+      reactions: Object.entries(REACTION_2_EMOJI)
+        .map(
+          ([key, emoji]) =>
+            [
+              emoji,
+              item.reactions?.[key as keyof typeof item.reactions],
+            ] as const
+        )
+        .filter(([, count]) => !!count),
     };
   })
 );
@@ -119,9 +148,46 @@ const issues = await Promise.all(
             })}
             id={issue.title}
           >
-            {issue.title}
+            <a href={issue.html_url} target="_blank">
+              {issue.title}
+            </a>
           </h1>
+          <div>
+            <a
+              class={flex({ gap: "2", alignItems: "center" })}
+              href={issue.user?.html_url}
+              target="_blank"
+            >
+              <img
+                src={issue.user?.avatar_url}
+                class={circle({
+                  size: "4",
+                })}
+              />
+              {issue.user?.name ?? issue.user?.login}
+            </a>
+          </div>
           <article set:html={issue.body} />
+          <div class={hstack({ gap: "2" })}>
+            {issue.reactions.map(([emoji, count]) => (
+              <span
+                class={css({
+                  // paddingBlock: "1",
+                  paddingInline: "2",
+                  rounded: "full",
+                  borderColor: {
+                    _dark: "white",
+                    base: "darkgray",
+                  },
+                  borderWidth: "thin",
+                  borderStyle: "solid",
+                })}
+              >
+                <span>{emoji}</span>
+                <span>{count}</span>
+              </span>
+            ))}
+          </div>
         </div>
       ))
     }
