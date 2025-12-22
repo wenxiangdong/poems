@@ -123,13 +123,15 @@ const issues = await Promise.all(
       justify-content: center;
       align-items: center;
       scroll-snap-align: center;
-      view-timeline-name: --page-view;
-      animation-name: my-animation;
-      animation-duration: 1ms;
-      animation-fill-mode: both;
-      animation-direction: alternate;
-      animation-timing-function: ease;
-      animation-timeline: --page-view;
+      @supports (animation-timeline: --page-view) {
+        view-timeline-name: --page-view;
+        animation-name: my-animation;
+        animation-duration: 1ms;
+        animation-fill-mode: both;
+        animation-direction: alternate;
+        animation-timing-function: ease;
+        animation-timeline: --page-view;
+      }
     }
 
     blockquote {
