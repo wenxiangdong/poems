@@ -2,9 +2,6 @@
 import { getClient } from "github-client";
 import GlobalLayout from "../layouts/GlobalLayout.astro";
 import { marked } from "marked";
-import { css } from "@styled-system/css";
-import "@fontsource/long-cang";
-import { aspectRatio, circle, flex, hstack } from "@styled-system/patterns";
 const client = getClient();
 const owner = "wenxiangdong";
 const repo = "poems";
@@ -18,30 +15,14 @@ marked.use({
     blockquote({ tokens }) {
       const text = this.parser.parse(tokens);
       return `
-            <blockquote class="${css({
-              opacity: "0.5",
-              margin: 4,
-              fontSize: "sm",
-              spaceY: 2,
-              "& p::before": {
-                content: "open-quote",
-              },
-              "& > p": {
-                fontSize: "initial",
-              },
-            })}">
+            <blockquote class="opacity-50 m-4 text-sm space-y-2 [&_p::before]:[content:open-quote] [&>p]:[font-size:inherit]">
               ${text}
             </blockquote>
             `;
     },
     paragraph({ tokens }) {
       return `
-      <p class="${css({
-        textAlign: "justify",
-        display: "flex",
-        justifyContent: "center",
-        fontSize: "lg",
-      })}" >${tokens.map((t) => t.raw).join("")}</p>
+      <p class="text-justify flex justify-center text-lg tracking-wider my-2">${tokens.map((t) => t.raw).join("")}</p>
       `;
     },
   },
@@ -113,6 +94,7 @@ const issues = await Promise.all(
       width: 100vw;
       height: 100vh;
       overflow-y: auto;
+      margin-inline: auto;
     }
     .page {
       width: 100%;
@@ -143,11 +125,7 @@ const issues = await Promise.all(
       issues.map((issue) => (
         <div class="page">
           <h1
-            class={css({
-              fontSize: "4xl",
-              fontFamily: "'Long Cang'",
-              textAlign: "center",
-            })}
+            class="text-4xl font-long-cang text-center"
             id={issue.title}
           >
             <a href={issue.html_url} target="_blank">
@@ -156,34 +134,22 @@ const issues = await Promise.all(
           </h1>
           <div>
             <a
-              class={flex({ gap: "2", alignItems: "center" })}
+              class="flex gap-2 items-center"
               href={issue.user?.html_url}
               target="_blank"
             >
               <img
                 src={issue.user?.avatar_url}
-                class={circle({
-                  size: "4",
-                })}
+                class="w-4 h-4 rounded-full"
               />
               {issue.user?.name ?? issue.user?.login}
             </a>
           </div>
           <article set:html={issue.body} />
-          <div class={hstack({ gap: "2" })}>
+          <div class="flex gap-2 items-center">
             {issue.reactions.map(([emoji, count]) => (
               <span
-                class={css({
-                  // paddingBlock: "1",
-                  paddingInline: "2",
-                  rounded: "full",
-                  borderColor: {
-                    _dark: "white",
-                    base: "darkgray",
-                  },
-                  borderWidth: "thin",
-                  borderStyle: "solid",
-                })}
+                class="px-2 rounded-full border-[darkgray] dark:border-white border border-solid"
               >
                 <span>{emoji}</span>
                 <span>{count}</span>

@@ -1,1 +1,19 @@
-@layer reset, base, tokens, recipes, utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-text-primary: #000;
+  --color-bg: #f9fafb; /* gray.50 */
+  --font-long-cang: 'Long Cang', cursive;
+  --font-pingfang: 'PingFang SC', sans-serif;
+
+  --color-text-primary-dark: #fff;
+  --color-bg-dark: #3e3841;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}

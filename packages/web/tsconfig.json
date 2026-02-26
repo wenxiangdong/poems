@@ -1,13 +1,13 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": ["src", "styled-system"],
+  "include": ["src"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
-      "@styled-system/*": ["./styled-system/*"],
+      "@/*": ["./src/*"]
     },
     "jsx": "preserve",
+    "jsxImportSource": "astro",
     "allowJs": true
   }
 }

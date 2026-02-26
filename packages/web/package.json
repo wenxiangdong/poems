@@ -4,7 +4,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "prepare": "panda codegen",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
@@ -22,7 +21,9 @@
     "typescript": "^5.4.4"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.37.2",
-    "postcss": "^8.4.40"
+    "@tailwindcss/postcss": "^4.2.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^4.2.1"
   }
 }
