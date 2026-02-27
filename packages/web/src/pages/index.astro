@@ -38,10 +38,19 @@ const REACTION_2_EMOJI = {
   eyes: "👀",
   rocket: "🚀",
 };
+const toHash = (text: string, index: number) => {
+  const normalized = text
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-\u4e00-\u9fa5]/g, "");
+  return normalized || `poem-${index + 1}`;
+};
 const issues = await Promise.all(
-  list.map(async (item) => {
+  list.map(async (item, index) => {
     return {
       title: item.title,
+      hash: toHash(item.title, index),
       body: await marked.parse(item.body ?? ""),
       user:
         item.user?.type === "Bot"
@@ -57,11 +66,11 @@ const issues = await Promise.all(
             [
               emoji,
               item.reactions?.[key as keyof typeof item.reactions],
-            ] as const
+            ] as const,
         )
         .filter(([, count]) => !!count),
     };
-  })
+  }),
 );
 ---
 
@@ -119,15 +128,79 @@ const issues = await Promise.all(
     blockquote {
       quotes: "\201C" "\201D";
     }
+
+    .toc-dialog {
+      display: none;
+      border-color: color-mix(in srgb, currentColor 20%, transparent);
+      margin: 0;
+      max-height: none;
+      height: 100dvh;
+      inset: 0 0 0 auto;
+      left: auto;
+      right: 0;
+      width: min(100vw, 40rem);
+    }
+
+    .toc-dialog:target {
+      display: flex;
+    }
+
+    .toc-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgb(0 0 0 / 0.25);
+      z-index: 15;
+      display: none;
+    }
+
+    #toc-dialog:target + .toc-backdrop {
+      display: block;
+    }
   </style>
+  <a
+    class:list={[
+      "fixed top-4 right-4 z-10",
+      "text-3xl text-text-primary/20 dark:text-text-primary-dark/20",
+    ]}
+    href="#toc-dialog"
+    aria-label="打开目录"
+    title="目录"
+  >
+    ☰
+  </a>
+  <dialog
+    id="toc-dialog"
+    class:list={[
+      "toc-dialog",
+      "fixed top-0 right-0 bottom-0 z-20 p-4",
+      "border",
+      "flex flex-col overflow-hidden",
+      "bg-bg dark:bg-bg-dark",
+      "text-text-primary dark:text-text-primary-dark",
+      "drop-shadow-2xl",
+    ]}
+  >
+    <div class="space-y-2 overflow-auto flex-1">
+      {
+        issues.map((item) => (
+          <div class="font-long-cang text-xl text-center">
+            <a href={`#${item.hash}`}>{item.title}</a>
+          </div>
+        ))
+      }
+    </div>
+    <div class="flex items-center justify-center pt-4">
+      <a href="#" class="px-2 py-1 text-text-primary/20 dark:text-text-primary-dark/20">
+        ✕
+      </a>
+    </div>
+  </dialog>
+  <a class="toc-backdrop" href="#" aria-label="关闭目录"></a>
   <div class="container">
     {
       issues.map((issue) => (
         <div class="page">
-          <h1
-            class="text-4xl font-long-cang text-center"
-            id={issue.title}
-          >
+          <h1 class="text-4xl font-long-cang text-center" id={issue.hash}>
             <a href={issue.html_url} target="_blank">
               {issue.title}
             </a>
@@ -138,19 +211,14 @@ const issues = await Promise.all(
               href={issue.user?.html_url}
               target="_blank"
             >
-              <img
-                src={issue.user?.avatar_url}
-                class="w-4 h-4 rounded-full"
-              />
+              <img src={issue.user?.avatar_url} class="w-4 h-4 rounded-full" />
               {issue.user?.name ?? issue.user?.login}
             </a>
           </div>
           <article set:html={issue.body} />
           <div class="flex gap-2 items-center">
             {issue.reactions.map(([emoji, count]) => (
-              <span
-                class="px-2 rounded-full border-[darkgray] dark:border-white border border-solid"
-              >
+              <span class="px-2 rounded-full border-[darkgray] dark:border-white border border-solid">
                 <span>{emoji}</span>
                 <span>{count}</span>
               </span>
